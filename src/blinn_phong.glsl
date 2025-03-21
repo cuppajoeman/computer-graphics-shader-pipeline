@@ -20,10 +20,15 @@ vec3 blinn_phong(
   vec3 v,
   vec3 l)
 {
-  /////////////////////////////////////////////////////////////////////////////
-  // Replace with your code 
-  return vec3(1,1,1);
-  /////////////////////////////////////////////////////////////////////////////
+  vec3 halfway_vec = normalize(v+l); 
+  float diffuse_reflect_amount = max(0,dot(n,l));
+  vec3 dra_vec = vec3(1, 1, 1) * diffuse_reflect_amount;
+  vec3 view_independent_light = ka + kd * dra_vec;
+  float spec_reflect_amount = pow(max(0,dot(n,halfway_vec)),p);
+  vec3 sra_vec = vec3(1, 1, 1) * spec_reflect_amount;
+  vec3 spec_light = ks * sra_vec;
+  vec3 light = view_independent_light + spec_light;
+  return light;
 }
 
 

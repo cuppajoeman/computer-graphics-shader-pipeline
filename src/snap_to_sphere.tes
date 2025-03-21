@@ -25,11 +25,20 @@ out vec3 sphere_fs_in;
 // expects: interpolat, model, 
 void main()
 {
-  /////////////////////////////////////////////////////////////////////////////
-  // Replace with your code 
   pos_fs_in = interpolate(gl_TessCoord, pos_es_in[0], pos_es_in[1], pos_es_in[2]);
+  // after tesslation the points get off the sphere, so we reign the back in
+  sphere_fs_in = normalize(pos_fs_in.xyz);
+  mat4 model = model(is_moon, animation_seconds);
+  view_pos_fs_in = view * model * vec4(sphere_fs_in, 1.0);
+  pos_fs_in = proj * view_pos_fs_in;
+  // after an object is transformed by the view and model matrix the 
+  // corresponding normal should also change to match the result if we
+  // apply the transform directly then the result can distort the normal causing
+  // non uniform scaling and angle changes, thus we "undo" that with the inverse
+  mat4 normal_mat = transpose(inverse(view * model));
+  normal_fs_in = (normal_mat * vec4(sphere_fs_in,0)).xyz;
+
   gl_Position = pos_fs_in;
-  /////////////////////////////////////////////////////////////////////////////
 }
 
 

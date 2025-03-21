@@ -12,8 +12,6 @@
 // expects: bump_height
 vec3 bump_position(bool is_moon , vec3 s)
 {
-  /////////////////////////////////////////////////////////////////////////////
-  // Replace with your code 
-  return s;
-  /////////////////////////////////////////////////////////////////////////////
+  // point on sphere, plus a normalized version of itself times some random bump height.
+  return s + bump_height(is_moon, s) * normalize(s);
 }
